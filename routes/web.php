@@ -8,4 +8,4 @@ Route::get('/students/create',[StudentController::class,'create']);
 Route::post('/students/store',[StudentController::class,'store']);
 Route::get('/students/delete/{id}',[StudentController::class,'delete']);
 Route::get('/students/edit/{id}',[StudentController::class,'edit']);
-Route::put('/students/update/{id}',[StudentController::class,'update']);
+Route::post('/students/update/{id}',[StudentController::class,'update']);
