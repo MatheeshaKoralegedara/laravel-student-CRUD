@@ -2,6 +2,9 @@
 
 @section('content')
 <h2 class="mb-4">Student List</h2>
+<form method="GET" action="/students" class="mb-3">
+    <input type="text" name="search" class="form-control" placeholder="Search students...">
+</form>
 
 <a href="/students/create" class="btn btn-primary mb-3">Add Student</a>
 
@@ -26,12 +29,14 @@
             <td>{{ $student->id }}</td>
             <td>{{ $student->name }}</td>
             <td>{{ $student->email }}</td>
+            <td>{{ $student->created_at->format('Y-m-d') }}</td>
             <td>
                 <a href="/students/edit/{{ $student->id }}" class="btn btn-warning btn-sm">Edit</a>
                 <form action="/students/delete/{{ $student->id}}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this student?');">
                     @csrf
                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
+            </td>
         </tr>
         @endforeach
     </tbody>
