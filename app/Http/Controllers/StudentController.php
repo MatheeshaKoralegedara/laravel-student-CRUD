@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth; // <--- for current user
 
 class StudentController extends Controller
 {
-    public function index(){
-        $students = Student::orderBy('id', 'desc')->paginate(5);
-        return view('students.index', compact('students')); 
+    public function index(Request $request){
+        $search = $request->search;
+
+        $students = Student::when($search, function($query, $search){
+            return $query->where('name', 'like', "%$search%")
+                         ->orWhere('email', 'like', "%$search%");
+        })->paginate(5);
+
+        return view('students.index', compact('students'));
     }
 
     public function create(){
@@ -20,14 +27,16 @@ class StudentController extends Controller
         //Validation
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:students,email'
+            'email' => 'required|email|unique:students,email,'
         ]);
 
         //Save to database
         Student::create([
-    'name' => $request->name,
-    'email' => $request->email
-]);
+            'name' => $request->name,
+            'email' => $request->email,
+            'user_id' => Auth::id() ?? 1 // <-- assign current user or 1 temporarily
+        ]);
+
         return redirect('/students')->with('success', 'Student created successfully!');
     }
 
@@ -37,9 +46,8 @@ class StudentController extends Controller
     }
 
     public function edit($id){
-        $student=Student::findOrFail($id);
-        return view('students.edit',compact('student'));
-
+        $student = Student::findOrFail($id);
+        return view('students.edit', compact('student'));
     }
 
     public function update(Request $request, $id){
@@ -48,13 +56,12 @@ class StudentController extends Controller
             'email' => 'required|email|unique:students,email,'.$id,
         ]);
 
-        $student=Student::findOrFail($id);
+        $student = Student::findOrFail($id);
         $student->update([
             'name' => $request->name,
             'email' => $request->email
-
         ]);
 
-        return redirect('/students')->with('success', 'Student Updated successfully!');
+        return redirect('/students')->with('success', 'Student updated successfully!');
     }
 }
