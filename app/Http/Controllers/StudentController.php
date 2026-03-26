@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class StudentController extends Controller
 {
     public function index(){
-        $students = Student::all();
+        $students = Student::orderBy('id', 'desc')->paginate(5);
         return view('students.index', compact('students')); 
     }
 
@@ -33,7 +33,7 @@ class StudentController extends Controller
 
     public function delete($id){
         Student::find($id)->delete();
-        return back();
+        return back()->with('success', 'Student deleted successfully!');
     }
 
     public function edit($id){

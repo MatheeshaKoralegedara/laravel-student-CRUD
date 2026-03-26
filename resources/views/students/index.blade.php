@@ -28,12 +28,15 @@
             <td>{{ $student->email }}</td>
             <td>
                 <a href="/students/edit/{{ $student->id }}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="/students/delete/{{ $student->id }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
-            </td>
+                <form action="/students/delete/{{ $student->id}}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this student?');">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
         </tr>
         @endforeach
     </tbody>
 </table>
+{{ $students->links('pagination::bootstrap-5')}}
 @endsection
 
 
