@@ -9,3 +9,4 @@ Route::post('/students/store',[StudentController::class,'store']);
 Route::post('/students/delete/{id}',[StudentController::class,'delete']);
 Route::get('/students/edit/{id}',[StudentController::class,'edit']);
 Route::post('/students/update/{id}',[StudentController::class,'update']);
+Route::resource('students', StudentController::class);
